@@ -1,25 +1,56 @@
 // we declare a new global variable containing an array that represents the ballons map
-// you have to add more colors into the ballonsMap array
-let ballonsMap = ['green'];
+const color = [
+  "green",
+  "red",
+  "violet",
+  "black",
+  "yellow",
+  "purple",
+  "grey",
+  "gray",
+  "brown",
+  "blue",
+  "pink",
+  "orange",
+];
 
-// poping a balloon is basically turning his color to null (no color)
-const popBalloon = (position) => {
-    // set the color to null on the balloon position
+let start = ""
+// you have to add more colors into the ballonsMap array
+let ballonsAlive = 20;
+//generando de forma dinamica los colores
+for (let i = 0; i < 20; i++) {
+  const randomColor = color[Math.floor(Math.random() * color.length)];
+  let ballon = document.createElement("div");
+  ballon.classList.add("balloon", "balloon");
+  ballon.style.background = randomColor;
+  ballon.id = i;
+
+  // Agregar EventListener a cada ballon:
+  ballon.addEventListener("click", (e) => {
+    if(ballonsAlive===20){
+        start = Date.now()
+    }
+    ballon.style.visibility = "hidden";
+    ballonsAlive--;
     render();
+  });
+
+  // Agregar cada ballon a la lista de ballons:
+  document.querySelector("#balloon-map").appendChild(ballon);
 }
 
 const render = () => {
-    
-    // convert ballons map of colors into real html balloons
-    const ballons = ballonsMap.map((color, position) => {
-        return `<div class="balloon active"></div>`; // <--- render each balloon
-    });
+  document.querySelector("#balloon-count").innerHTML = ballonsAlive; // <-- render the balloon count into the DOM
 
-    document.querySelector("#balloon-count").innerHTML = ballons.filter(b => b !== null).length; // <-- render the balloon count into the DOM
-    document.querySelector("#balloon-map").innerHTML = ballons.join(''); // <-- render the balloons into the DOM
-
-    if(activeBalloons == 0) window.location.reload(); // <--- reload website when no more balloons are left
-}
+  if (ballonsAlive == 0) {
+    console.log((Date.now() - start)/1000)
+    document.querySelector("#balloon-map").innerHTML =
+      `<h3 class="win">Tiempo: ${(Date.now() - start)/1000} segundos</h3><h1 class='win'>You balloon serial popper!</h1><h1 class='win'>Play again!</h1>`;
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+  } // <--- reload website when no more balloons are left
+};
 
 // this makes the "render" function trigger when the website starts existing
 window.onload = render();
